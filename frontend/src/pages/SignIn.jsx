@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignIn = () => {
   const [signinFormData, setSigninFormData] = useState({});
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  //const [error, setError] = useState(false);
+  //const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setSigninFormData({ ...signinFormData, [e.target.id]: e.target.value });
@@ -15,8 +23,9 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setError(false);
-      setLoading(true);
+      //setError(false);
+      //setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -25,15 +34,19 @@ const SignIn = () => {
         body: JSON.stringify(signinFormData),
       });
       const data = await res.json();
-      setLoading(false);
+      //setLoading(false);
+
       if (data.success === false) {
-        setError(true);
+        //setError(true);
+        dispatch(signInFailure(data));
         return;
       }
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (err) {
-      setLoading(false);
-      setError(true);
+      //setLoading(false);
+      //setError(true);
+      dispatch(signInFailure(err));
     }
   };
 
@@ -63,7 +76,9 @@ const SignIn = () => {
         >
           {loading ? "Loading..." : "Sign In"}
         </button>
-        <p className="my-5 text-red-600">{error && "Something went wrong"}</p>
+        <p className="my-5 text-red-600">
+          {error ? error.message || "Something went wrong" : ""}
+        </p>
       </form>
       <div className="flex gap-3 mt-5">
         <p>Don't you have an account?</p>
