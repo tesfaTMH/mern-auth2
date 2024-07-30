@@ -6,6 +6,7 @@ import {
   signInFailure,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const [signinFormData, setSigninFormData] = useState({});
@@ -76,6 +77,7 @@ const SignIn = () => {
         >
           {loading ? "Loading..." : "Sign In"}
         </button>
+        <OAuth />
         <p className="my-5 text-red-600">
           {error ? error.message || "Something went wrong" : ""}
         </p>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const [signupFormData, setSignupFormData] = useState({});
@@ -71,6 +72,7 @@ const SignUp = () => {
         >
           {loading ? "Loading..." : "Sign Up"}
         </button>
+        <OAuth />
         <p className="my-5 text-red-600">{error && "Something went wrong"}</p>
       </form>
       <div className="flex gap-3 mt-5">
