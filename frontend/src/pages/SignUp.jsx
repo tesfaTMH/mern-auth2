@@ -32,6 +32,7 @@ const SignUp = () => {
         return;
       }
       navigate("/sign-in");
+      setLoading(false);
     } catch (err) {
       setLoading(false);
       setError(true);
@@ -67,7 +68,7 @@ const SignUp = () => {
           onChange={handleChange}
         />
         <button
-          disabled={loading}
+          //disabled={loading}
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
           {loading ? "Loading..." : "Sign Up"}
