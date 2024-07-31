@@ -1,3 +1,36 @@
+import { customErrorHandler } from "../utils/customErrorHandler.js";
+import bcryptjs from "bcryptjs";
+import User from "../models/userModel.js";
+
 export const userController = (req, res) => {
   res.json({ message: "API testing route" });
+};
+
+//update user
+export const updateUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id) {
+    return next(customErrorHandler(401, "You can update only your account"));
+  }
+  try {
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+          profilePicture: req.body.profilePicture,
+        },
+      },
+      { new: true }
+    );
+    const { password, ...userDetails } = updatedUser._doc;
+    res.status(200).json(userDetails);
+  } catch (err) {
+    next(err);
+  }
 };

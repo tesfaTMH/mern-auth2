@@ -6,12 +6,14 @@ import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
 
 import { errorHandler } from "./middleware/errorHandler.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 connectDB();
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = 3000;
 
