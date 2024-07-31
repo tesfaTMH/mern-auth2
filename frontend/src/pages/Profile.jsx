@@ -17,6 +17,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUser,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -94,11 +95,20 @@ const Profile = () => {
       const data = await res.json();
       if (data.success === false) {
         dispatch(deleteUserFailure(data));
+        return;
       }
-      dispatch(deleteUserSuccess);
-      navigate("/log-in");
+      dispatch(deleteUserSuccess(data));
     } catch (err) {
       dispatch(deleteUserFailure(err));
+    }
+  };
+
+  const handleSignout = async () => {
+    try {
+      await fetch("/api/auth/signout");
+      dispatch(signOutUser());
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -166,7 +176,9 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignout} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
       <p className="text-red-700 mt-5">{error && "Something went wrong"}</p>
       <p className="text-green-700 mt-5">
